@@ -4,66 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aplikasi Arisan</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background-color: #f5f5f5;
-      color: #333;
-    }
-    .container {
-      max-width: 400px;
-      margin: 80px auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-      color: #4CAF50;
-    }
-    input[type="text"], input[type="password"] {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    #mainMenu {
-      display: none;
-      text-align: center;
-      padding: 40px 20px;
-    }
-    .menu-btn {
-      display: block;
-      margin: 15px auto;
-      padding: 15px 25px;
-      background-color: #FFC107;
-      color: #333;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .menu-btn:hover {
-      background-color: #ffb300;
-    }
-  </style>
 </head>
 <body>
   <div class="container" id="loginForm">
@@ -73,99 +16,43 @@
     <button onclick="login()">Login</button>
   </div>
 
-  <div id="mainMenu">
+  <div id="mainMenu" style="display:none;">
     <h2>Menu Utama</h2>
     <button class="menu-btn" onclick="goTo('input')">Input Data</button>
     <button class="menu-btn" onclick="goTo('pengeluaran')">Pengeluaran</button>
     <button class="menu-btn" onclick="goTo('laporan')">Laporan</button>
     <button class="menu-btn" onclick="logout()">Logout</button>
   </div>
-  <div id="inputForm" style="display:none;" class="container">
-  <h2>Form Input Arisan</h2>
-  <label>Penerima:</label>
-  <select id="penerima"></select>
 
-  <label>Bulan:</label>
-  <select id="bulan"></select>
+  <div id="inputForm" class="container" style="display:none;">
+    <h2>Form Input Arisan</h2>
+    <select id="penerima"></select>
+    <select id="bulan"></select>
+    <select id="tahun"></select>
+    <select id="penyetor"></select>
+    <input type="text" id="jumlah" placeholder="Jumlah Disetor" />
+    <input type="text" id="kasPenerima" placeholder="Kas Penerima" />
+    <input type="text" id="kasPanitia" placeholder="Kas Panitia" />
+    <button onclick="simpanInput()">Simpan</button>
+    <button onclick="kembaliKeMenu()">Kembali</button>
+    <p id="statusInput"></p>
+  </div>
 
-  <label>Tahun:</label>
-  <select id="tahun"></select>
+  <div id="pengeluaranForm" class="container" style="display:none;">
+    <h2>Form Pengeluaran</h2>
+    <select id="bulanPengeluaran"></select>
+    <select id="tahunPengeluaran"></select>
+    <input type="text" id="keterangan" placeholder="Keterangan" />
+    <input type="text" id="jumlahPengeluaran" placeholder="Jumlah" />
+    <button onclick="simpanPengeluaran()">Simpan</button>
+    <button onclick="kembaliKeMenu()">Kembali</button>
+    <p id="statusPengeluaran"></p>
+  </div>
 
-  <label>Penyetor:</label>
-  <select id="penyetor"></select>
-
-  <label>Jumlah Disetor:</label>
-  <input type="text" id="jumlah" />
-
-  <label>Kas Untuk Penerima:</label>
-  <input type="text" id="kasPenerima" />
-
-  <label>Kas Untuk Panitia:</label>
-  <input type="text" id="kasPanitia" />
-
-  <button onclick="simpanInput()">Simpan</button>
-  <button onclick="kembaliKeMenu()">Kembali</button>
-  <p id="statusInput" style="color:green;"></p>
-</div>
-
-  <script>
-    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwj4__E715V8DJT6xy0eglUhxvpJwxDNhrsXc5zSanCtTppz1d3W4LROt496h3_hFSf/exec'; // Ganti dengan URL Web App kamu
-
-    function login() {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      fetch(GAS_WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: '_login', username, password }),
-        headers: { 'Content-Type': 'application/json' }
-      })
-      .then(res => res.json())
-      .then(response => {
-        if (response.success) {
-          localStorage.setItem('token', response.token);
-          showMainMenu();
-        } else {
-          alert(response.message || 'Login gagal');
-        }
-      });
-    }
-
-    function showMainMenu() {
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('mainMenu').style.display = 'block';
-    }
-
-    function logout() {
-      localStorage.removeItem('token');
-      location.reload();
-    }
-
-    function goTo(menu) {
-      alert('Navigasi ke menu: ' + menu); // Ganti dengan fungsi navigasi sesungguhnya
-    }
-
-    // Auto-login jika token valid
-    window.onload = () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        fetch(GAS_WEB_APP_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: '_whoami', token }),
-          headers: { 'Content-Type': 'application/json' }
-        })
-        .then(res => res.json())
-        .then(response => {
-          if (response.success) {
-            showMainMenu();
-          } else {
-            localStorage.removeItem('token');
-          }
-        });
-      }
-    };
-  </script>
+  <div id="laporanForm" class="container" style="display:none;">
+    <h2>Laporan Arisan</h2>
+    <div id="laporanData"></div>
+    <button onclick="kembaliKeMenu()">Kembali</button>
+  </div>
 </body>
 </html>
-<link rel="stylesheet" href="style.css" />
-<script src="script.js" defer></script>
-
