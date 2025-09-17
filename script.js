@@ -1,5 +1,5 @@
 // script.js
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwj4__E715V8DJT6xy0eglUhxvpJwxDNhrsXc5zSanCtTppz1d3W4LROt496h3_hFSf/exec'; // Ganti dengan URL Web App kamu
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwYZOMUVUlC6O9lvLdKRRtTA51aRdceDFge8Zk_mFiC32BeJyrO7vmLGRbzGE3JJ-s/exec'; // Ganti dengan URL Web App kamu
 
 function login() {
   const username = document.getElementById('username').value.trim();
@@ -160,3 +160,4 @@ function simpanInput() {
     }
   });
 }
+
